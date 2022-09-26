@@ -37,19 +37,15 @@ class MainActivity : AppCompatActivity() {
     }
 
     private suspend fun printFollowers1(){
-        var fbFollowers = 0
-        var instaFollowers = 0
-        val job1 = CoroutineScope(Dispatchers.IO).launch{
-            fbFollowers = getFbFollowers()
+        val fb = CoroutineScope(Dispatchers.IO).async{
+            getFbFollowers()
         }
 
-        val job2 = CoroutineScope(Dispatchers.IO).launch {
-            instaFollowers = geInstaFollowers()
+        val insta = CoroutineScope(Dispatchers.IO).async {
+            geInstaFollowers()
         }
-        job1.join()
-        job2.join()
 
-        Log.d(TAG, "Fb - $fbFollowers , Insta - $instaFollowers")
+        Log.d(TAG, "Fb - ${fb.await()} , Insta - ${insta.await()}")
     }
 
     private suspend fun  getFbFollowers(): Int {
