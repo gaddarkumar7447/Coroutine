@@ -1,6 +1,7 @@
 package com.example.coroutines
 
 import android.content.Intent
+import android.database.DatabaseUtils
 import android.nfc.Tag
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -9,27 +10,34 @@ import android.util.Log
 import android.view.ActionMode
 import android.view.View
 import android.widget.Button
+import androidx.databinding.DataBindingUtil
+import com.example.coroutines.databinding.ActivityMainBinding
 import kotlinx.coroutines.*
 
 class MainActivity : AppCompatActivity() {
     private val TAG = "TAG"
     private val MAINACTIVITY = "MAINACTIVITY"
+    lateinit var dataBinding : ActivityMainBinding
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
-
+        dataBinding = DataBindingUtil.setContentView(this, R.layout.activity_main)
         Log.d(MAINACTIVITY, "onCreate")
         /*CoroutineScope(Dispatchers.IO).launch {
             printFollowers()
         }*/
+        var a = 0
+        dataBinding.button.setOnClickListener(View.OnClickListener {
+            dataBinding.text.text = a++.toString()
+        })
 
-        findViewById<Button>(R.id.button).setOnClickListener(View.OnClickListener {
-            startActivity(Intent(this, AnotherActivity::class.java))
+        dataBinding.button1.setOnClickListener(View.OnClickListener {
+            executeTask()
         })
 
     }
 
-    override fun onStart() {
+
+    /*override fun onStart() {
         super.onStart()
         Log.d(MAINACTIVITY, "onStart")
     }
@@ -57,7 +65,14 @@ class MainActivity : AppCompatActivity() {
     override fun onRestart() {
         super.onRestart()
         Log.d(MAINACTIVITY, "onRestart")
+    }*/
+
+    private fun executeTask(){
+        for (i in 1 .. 1000000000L){
+
+        }
     }
+
 
     // launch
     /*private suspend fun printFollowers() {
