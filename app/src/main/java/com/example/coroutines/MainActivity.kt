@@ -13,11 +13,13 @@ import android.widget.Button
 import androidx.databinding.DataBindingUtil
 import com.example.coroutines.databinding.ActivityMainBinding
 import kotlinx.coroutines.*
+import kotlin.concurrent.thread
 
 class MainActivity : AppCompatActivity() {
     private val TAG = "TAG"
     private val MAINACTIVITY = "MAINACTIVITY"
     lateinit var dataBinding : ActivityMainBinding
+    @OptIn(DelicateCoroutinesApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         dataBinding = DataBindingUtil.setContentView(this, R.layout.activity_main)
@@ -26,12 +28,28 @@ class MainActivity : AppCompatActivity() {
             printFollowers()
         }*/
         var a = 0
+
+        dataBinding.text.text = a.toString()
+
         dataBinding.button.setOnClickListener(View.OnClickListener {
             dataBinding.text.text = a++.toString()
         })
 
         dataBinding.button1.setOnClickListener(View.OnClickListener {
-            executeTask()
+            /*thread(start = true) {
+                executeTask()
+            }*/
+            CoroutineScope(Dispatchers.IO).launch {
+                Log.d("TAG", "1 - "+ Thread.currentThread().name)
+            }
+
+            GlobalScope.launch {
+                Log.d("TAG", "2 - "+Thread.currentThread().name)
+            }
+
+            MainScope().launch {
+                Log.d("TAG","3 - "+ Thread.currentThread().name)
+            }
         })
 
     }
@@ -68,7 +86,7 @@ class MainActivity : AppCompatActivity() {
     }*/
 
     private fun executeTask(){
-        for (i in 1 .. 1000000000L){
+        for (i in 1 .. 100){
 
         }
     }
