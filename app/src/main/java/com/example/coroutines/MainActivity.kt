@@ -27,19 +27,21 @@ class MainActivity : AppCompatActivity() {
         /*CoroutineScope(Dispatchers.IO).launch {
             printFollowers()
         }*/
-        var a = 0
+        /*var a = 0
 
         dataBinding.text.text = a.toString()
 
         dataBinding.button.setOnClickListener(View.OnClickListener {
             dataBinding.text.text = a++.toString()
-        })
+        })*/
+
 
         dataBinding.button1.setOnClickListener(View.OnClickListener {
             /*thread(start = true) {
                 executeTask()
             }*/
-            CoroutineScope(Dispatchers.IO).launch {
+            /*CoroutineScope(Dispatchers.IO).launch {
+                executeTask()
                 Log.d("TAG", "1 - "+ Thread.currentThread().name)
             }
 
@@ -49,10 +51,28 @@ class MainActivity : AppCompatActivity() {
 
             MainScope().launch {
                 Log.d("TAG","3 - "+ Thread.currentThread().name)
-            }
+            }*/
+
         })
 
+        CoroutineScope(Dispatchers.IO).launch {
+            task1()
+        }
+        CoroutineScope(Dispatchers.IO).launch {
+            task2()
+        }
     }
+    private suspend fun task1(){
+        Log.d(TAG, "Starting task 1")
+        delay(5000)
+        Log.d(TAG, "Ending task 1")
+    }
+
+    private suspend fun task2(){
+        Log.d(TAG, "Starting task 2")
+        Log.d(TAG, "Ending task 2")
+    }
+
 
 
     /*override fun onStart() {
