@@ -13,17 +13,20 @@ import android.widget.Button
 import androidx.databinding.DataBindingUtil
 import com.example.coroutines.databinding.ActivityMainBinding
 import kotlinx.coroutines.*
+import org.w3c.dom.DOMImplementationSource
 import kotlin.concurrent.thread
 
 class MainActivity : AppCompatActivity() {
     private val TAG = "TAG"
     private val MAINACTIVITY = "MAINACTIVITY"
-    lateinit var dataBinding : ActivityMainBinding
+    lateinit var dataBinding: ActivityMainBinding
+
     @OptIn(DelicateCoroutinesApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         dataBinding = DataBindingUtil.setContentView(this, R.layout.activity_main)
-        Log.d(MAINACTIVITY, "onCreate")
+
+        /*Log.d(MAINACTIVITY, "onCreate")*/
         /*CoroutineScope(Dispatchers.IO).launch {
             printFollowers()
         }*/
@@ -36,11 +39,11 @@ class MainActivity : AppCompatActivity() {
         })*/
 
 
-        dataBinding.button1.setOnClickListener(View.OnClickListener {
-            /*thread(start = true) {
+        /*dataBinding.button1.setOnClickListener(View.OnClickListener {
+            *//*thread(start = true) {
                 executeTask()
-            }*/
-            /*CoroutineScope(Dispatchers.IO).launch {
+            }*//*
+            *//*CoroutineScope(Dispatchers.IO).launch {
                 executeTask()
                 Log.d("TAG", "1 - "+ Thread.currentThread().name)
             }
@@ -51,18 +54,73 @@ class MainActivity : AppCompatActivity() {
 
             MainScope().launch {
                 Log.d("TAG","3 - "+ Thread.currentThread().name)
-            }*/
+            }*//*
 
-        })
+        })*/
 
-        CoroutineScope(Dispatchers.IO).launch {
+        /*CoroutineScope(Dispatchers.IO).launch {
             task1()
         }
         CoroutineScope(Dispatchers.IO).launch {
             task2()
+        }*/
+
+        /*val job = CoroutineScope(Dispatchers.IO).launch {
+            callFollowers()
+        }
+
+        val des = CoroutineScope(Dispatchers.IO).async {
+
+        }*/
+        CoroutineScope(Dispatchers.Main).launch {
+            coroutinesHierarchy()
         }
     }
-    private suspend fun task1(){
+
+    private suspend  fun coroutinesHierarchy() {
+        val job = GlobalScope.launch(Dispatchers.Main) {
+            Log.d(TAG, "Parent - $coroutineContext")
+            val dis = async(Dispatchers.IO) {
+                Log.d(TAG, "child - $coroutineContext")
+            }
+
+        }
+    }
+
+    private suspend fun callFollowers() {
+        /*var follower = 0
+        val job = CoroutineScope(Dispatchers.IO).launch {
+            follower = getFollowers()
+        }
+        job.join()*/
+        /*val job = CoroutineScope(Dispatchers.IO).async {
+            getFollowers()
+        }
+
+        val inst = CoroutineScope(Dispatchers.IO).async {
+            getInstragram()
+        }*/
+
+        CoroutineScope(Dispatchers.IO).launch {
+            val fb = async { getFollowers() }
+            val instra = async { getInstragram() }
+            Log.d(TAG, "Get followers ${fb.await()}")
+            Log.d(TAG, "Get Instagram ${instra.await()}")
+        }
+
+
+    }
+
+    private suspend fun getFollowers(): Int {
+        delay(1000)
+        return 50
+    }
+
+    private suspend fun getInstragram(): Int {
+        delay(1000)
+        return 113
+    }
+    /*private suspend fun task1(){
         Log.d(TAG, "Starting task 1")
         delay(5000)
         Log.d(TAG, "Ending task 1")
@@ -71,8 +129,7 @@ class MainActivity : AppCompatActivity() {
     private suspend fun task2(){
         Log.d(TAG, "Starting task 2")
         Log.d(TAG, "Ending task 2")
-    }
-
+    }*/
 
 
     /*override fun onStart() {
@@ -105,9 +162,9 @@ class MainActivity : AppCompatActivity() {
         Log.d(MAINACTIVITY, "onRestart")
     }*/
 
-    private fun executeTask(){
-        for (i in 1 .. 100){
-
+    private fun executeTask() {
+        for (i in 1..100) {
+            Log.d("E", "executing $i")
         }
     }
 
