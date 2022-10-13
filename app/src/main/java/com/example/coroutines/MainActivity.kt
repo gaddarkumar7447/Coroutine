@@ -72,9 +72,23 @@ class MainActivity : AppCompatActivity() {
         val des = CoroutineScope(Dispatchers.IO).async {
 
         }*/
-        CoroutineScope(Dispatchers.Main).launch {
+        /*CoroutineScope(Dispatchers.Main).launch {
             coroutinesHierarchy()
+        }*/
+        GlobalScope.launch{
+            execute()
         }
+    }
+
+    private suspend fun execute(){
+        Log.d(TAG, "Before")
+
+        withContext(Dispatchers.IO) {
+            delay(1000)
+            Log.d(TAG, "$coroutineContext")
+        }
+        
+        Log.d(TAG, "final")
     }
 
     private suspend  fun coroutinesHierarchy() {
